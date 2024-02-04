@@ -16,15 +16,17 @@ jobs:
           TOMORROW=$(date -d"+1 days" +%Y-%m-%d)
           echo "Getting sunshine forecast for $TOMORROW"
           
-          KW_PREDICTIONS=$(
-            curl -v "https://api.solcast.com.au/rooftop_sites/${{ secrets.SOLCAST_SITE }}/forecasts?format=json" \
-              --header "Authorization: Bearer ${{ secrets.SOLCAST_API_KEY }}"
-          )
-          echo "KW_PREDICTIONS are $KW_PREDICTIONS"
+          PREDICTIONS_FILE=/tmp/solcast_predictions.json
+          
+          # curl -v "https://api.solcast.com.au/rooftop_sites/${{ secrets.SOLCAST_SITE }}/forecasts?format=json" \
+          #  --header "Authorization: Bearer ${{ secrets.SOLCAST_API_KEY }}" > $PREDICTIONS_FILE
+          
+          echo '{"forecasts":[{"pv_estimate":10,"pv_estimate10":0,"pv_estimate90":0,"period_end":"2024-02-04T17:30:00.0000000Z","period":"PT30M"}]}' > $PREDICTIONS_FILE 
+          cat $PREDICTIONS_FILE
           
           KWH_PREDICTION=$(
               echo $KW_PREDICTIONS | \
-              jq ".forecasts[]  | select(.period_end | contains('$TOMORROW')) | .pv_estimate" | \
+              jq ".forecasts[]  | select(.period_end | contains('$TOMORROW')) | .pv_estimate" | $PREDICTIONS_FILE \
               awk '{ sum += $1 } END { print sum }'
           )
 
