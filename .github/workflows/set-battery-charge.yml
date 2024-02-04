@@ -25,7 +25,7 @@ jobs:
           cat $PREDICTIONS_FILE
           
           KWH_PREDICTION=$(
-              jq ".forecasts[]  | select(.period_end | contains('$TOMORROW')) | .pv_estimate" $PREDICTIONS_FILE | \
+              jq ".forecasts[]  | select(.period_end | contains(\"$TOMORROW\")) | .pv_estimate" $PREDICTIONS_FILE | \
               awk '{ sum += $1 } END { print sum }'
           )
 
