@@ -30,14 +30,14 @@ jobs:
           )
 
           echo "Predicted solar energy for $TOMORROW is ${KWH_PREDICTION}kWh"
-          echo "KWH_PREDICTION=$KWH_PREDICTION" >> $GITHUB_OUTPUT
+          # echo "KWH_PREDICTION=$KWH_PREDICTION" >> $GITHUB_OUTPUT
 
       - id: set-battery-charge-percentage
         name: 'Set Battery Charge Percentage'
         run: |
           BATTERY_CAPACITY_KWH="9.52"
           EXPECTED_CONSUMPTION_KWH=12
-          KWH_PREDICTION="${{ steps.get-sunshine-prediction.KWH_PREDICTION }}"
+          # KWH_PREDICTION="${{ steps.get-sunshine-prediction.KWH_PREDICTION }}"
           
           let "SHORT_FALL_KWH=$EXPECTED_CONSUMPTION_KWH-$KWH_PREDICTION"
           echo "Expecting to need ${SHORT_FALL_KWH}kWh from the grid tomorrow"
