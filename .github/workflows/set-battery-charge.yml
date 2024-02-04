@@ -18,7 +18,7 @@ jobs:
           echo "Getting sunshine forecast for $TOMORROW"
           
           KWH_PREDICTION=$(
-            curl 'https://api.solcast.com.au/rooftop_sites/${{ secrets.SOLCAST_SITE }}/forecasts?format=json' \
+            curl -v "https://api.solcast.com.au/rooftop_sites/${{ secrets.SOLCAST_SITE }}/forecasts?format=json" \
               --header "Authorization: Bearer ${{ secrets.SOLCAST_API_KEY }}" | \
               jq ".forecasts[]  | select(.period_end | contains('$1')) | .pv_estimate" | \
               awk '{ sum += $1 } END { print sum }'
@@ -42,7 +42,7 @@ jobs:
           CHARGE_PERCENT=$((CHARGE_PERCENT>90 ? 90: CHARGE_PERCENT))
           CHARGE_PERCENT=$((CHARGE_PERCENT<30 ? 30: CHARGE_PERCENT))
           
-          curl --location "https://api.givenergy.cloud/v1/inverter/${{ secrets.GIVENERGY_INVERTER_SERIAL_NUM }}/settings/77/write" \
+          curl -v "https://api.givenergy.cloud/v1/inverter/${{ secrets.GIVENERGY_INVERTER_SERIAL_NUM }}/settings/77/write" \
             --header 'Content-Type: application/json' \
             --header 'Accept: application/json' \
             --header "Authorization: Bearer ${{ secrets.GIVENERGY_API_KEY }}" \
