@@ -1,5 +1,4 @@
 name: Set Battery Grid Charge
-
 on:
   schedule:
     - cron: '22,23,0 0 * * *'
@@ -16,12 +15,18 @@ jobs:
         run: |
           TOMORROW=$(date -d"+1 days" +%Y-%m-%d)
           echo "Getting sunshine forecast for $TOMORROW"
-
-          TEST=$(curl google.com)
-          echo "Test was $TEST"
-               
-          TEST_2=`curl google.com`
-          echo "Test2 was $TEST_2"
+          
+          KW_PREDICTIONS=$(
+            curl -v "https://api.solcast.com.au/rooftop_sites/${{ secrets.SOLCAST_SITE }}/forecasts?format=json" \
+              --header "Authorization: Bearer ${{ secrets.SOLCAST_API_KEY }}"
+          )
+          echo "KW_PREDICTIONS are $KW_PREDICTIONS"
+          
+          KWH_PREDICTION=$(
+              echo $KW_PREDICTIONS | \
+              jq ".forecasts[]  | select(.period_end | contains('$TOMORROW')) | .pv_estimate" | \
+              awk '{ sum += $1 } END { print sum }'
+          )
 
           echo "Predicted solar energy for $TOMORROW is ${KWH_PREDICTION}kWh"
           echo "KWH_PREDICTION=$KWH_PREDICTION" >> $GITHUB_OUTPUT
