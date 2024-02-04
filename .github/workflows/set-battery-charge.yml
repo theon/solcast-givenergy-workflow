@@ -39,14 +39,16 @@ jobs:
           EXPECTED_CONSUMPTION_KWH=12
           KWH_PREDICTION="${{ steps.get-sunshine-prediction.outputs.KWH_PREDICTION }}"
           
-          let "SHORT_FALL_KWH=$EXPECTED_CONSUMPTION_KWH-$KWH_PREDICTION"
+          SHORT_FALL_KWH=$(
+            echo "$EXPECTED_CONSUMPTION_KWH $KWH_PREDICTION" | awk '{ print $1 - $2 }'
+          )
           echo "Expecting to need ${SHORT_FALL_KWH}kWh from the grid tomorrow"
           
-          let "CHARGE_PERCENT=$SHORT_FALL_KWH/$BATTERY_CAPACITY_KWH*100"
+          CHARGE_PERCENT=$(
+            echo "$SHORT_FALL_KWH $BATTERY_CAPACITY_KWH" | \
+              awk '{ charge = $1 / $2 * 100; print (charge < 25 ? 25 : charge > 90 ? 90 : charge ) }'
+          )
           echo "Setting battery to charge to ${CHARGE_PERCENT}%"
-          
-          CHARGE_PERCENT=$((CHARGE_PERCENT>90 ? 90: CHARGE_PERCENT))
-          CHARGE_PERCENT=$((CHARGE_PERCENT<30 ? 30: CHARGE_PERCENT))
           
           curl -v "https://api.givenergy.cloud/v1/inverter/${{ secrets.GIVENERGY_INVERTER_SERIAL_NUM }}/settings/77/write" \
             --header 'Content-Type: application/json' \
