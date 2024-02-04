@@ -18,17 +18,26 @@ jobs:
           TOMORROW=$(date -d"+1 days" +%Y-%m-%d)
           echo "Getting sunshine forecast for $TOMORROW"
           
-          KWH_PREDICTION=$(
-            curl -v "https://api.solcast.com.au/rooftop_sites/${{ secrets.SOLCAST_SITE }}/forecasts?format=json" \
-              --header "Authorization: Bearer ${{ secrets.SOLCAST_API_KEY }}" | \
-              jq ".forecasts[]  | select(.period_end | contains('$1')) | .pv_estimate" | \
-              awk '{ sum += $1 } END { print sum }'
-          )
+#          KWH_PREDICTION=$(
+#            curl -v "https://api.solcast.com.au/rooftop_sites/${{ secrets.SOLCAST_SITE }}/forecasts?format=json" \
+#              --header "Authorization: Bearer ${{ secrets.SOLCAST_API_KEY }}" | \
+#              jq ".forecasts[]  | select(.period_end | contains('$1')) | .pv_estimate" | \
+#              awk '{ sum += $1 } END { print sum }'
+#          )
+
+         TEST=$(curl google.com)
+         echo "Test was $TEST"
+               
+         TEST_2=`curl google.com`
+         echo "Test2 was $TEST_2"
+          
+
           echo "Predicted solar energy for $TOMORROW is ${KWH_PREDICTION}kWh"
           echo "KWH_PREDICTION=$KWH_PREDICTION" >> $GITHUB_OUTPUT
 
       - id: set-battery-charge-percentage
         name: 'Set Battery Charge Percentage'
+        if: false
         run: |
           BATTERY_CAPACITY_KWH=9.52
           EXPECTED_CONSUMPTION_KWH=12
