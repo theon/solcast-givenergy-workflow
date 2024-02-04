@@ -25,11 +25,11 @@ jobs:
 #              awk '{ sum += $1 } END { print sum }'
 #          )
 
-         TEST=$(curl google.com)
-         echo "Test was $TEST"
+          TEST=$(curl google.com)
+          echo "Test was $TEST"
                
-         TEST_2=`curl google.com`
-         echo "Test2 was $TEST_2"
+          TEST_2=`curl google.com`
+          echo "Test2 was $TEST_2"
           
 
           echo "Predicted solar energy for $TOMORROW is ${KWH_PREDICTION}kWh"
