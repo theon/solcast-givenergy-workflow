@@ -14,7 +14,7 @@ jobs:
       - id: get-sunshine-prediction
         name: 'Get Sunshine Prediction'
         run: |
-          TOMORROW=$(date -v+1d +%Y-%m-%d)
+          TOMORROW=$(date -d"+1 days" +%Y-%m-%d)
           echo "Getting sunshine forecast for $TOMORROW"
           
           KWH_PREDICTION=$(
