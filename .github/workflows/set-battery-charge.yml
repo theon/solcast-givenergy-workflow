@@ -1,4 +1,5 @@
-name: Set how much to grid charge battery based on predicted sunshine tomorrow
+name: Set Battery Grid Charge
+#  Set how much to grid charge the battery based on predicted sunshine tomorrow
 
 on:
   schedule:
