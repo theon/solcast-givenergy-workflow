@@ -34,7 +34,6 @@ jobs:
 
       - id: set-battery-charge-percentage
         name: 'Set Battery Charge Percentage'
-        if: false
         run: |
           BATTERY_CAPACITY_KWH=9.52
           EXPECTED_CONSUMPTION_KWH=12
