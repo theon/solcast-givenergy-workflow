@@ -18,10 +18,8 @@ jobs:
           
           PREDICTIONS_FILE="/tmp/solcast_predictions.json"
           
-          # curl -v "https://api.solcast.com.au/rooftop_sites/${{ secrets.SOLCAST_SITE }}/forecasts?format=json" \
-          #  --header "Authorization: Bearer ${{ secrets.SOLCAST_API_KEY }}" > $PREDICTIONS_FILE
-          
-          echo '{"forecasts":[{"pv_estimate":10,"pv_estimate10":0,"pv_estimate90":0,"period_end":"2024-02-05T17:30:00.0000000Z","period":"PT30M"}]}' > $PREDICTIONS_FILE 
+          curl -v "https://api.solcast.com.au/rooftop_sites/${{ secrets.SOLCAST_SITE }}/forecasts?format=json" \
+            --header "Authorization: Bearer ${{ secrets.SOLCAST_API_KEY }}" > $PREDICTIONS_FILE 
           cat $PREDICTIONS_FILE
           
           KWH_PREDICTION=$(
