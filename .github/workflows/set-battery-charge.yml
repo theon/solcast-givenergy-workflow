@@ -26,7 +26,7 @@ jobs:
           
           KWH_PREDICTION=$(
               jq ".forecasts[]  | select(.period_end | contains(\"$TOMORROW\")) | .pv_estimate" $PREDICTIONS_FILE | \
-              awk '{ sum += $1 } END { print sum }'
+              awk '{ sum += $1 } END { print sum / 2.0 }'
           )
 
           echo "Predicted solar energy for $TOMORROW is ${KWH_PREDICTION}kWh"
@@ -35,9 +35,9 @@ jobs:
       - id: set-battery-charge-percentage
         name: 'Set Battery Charge Percentage'
         run: |
-          BATTERY_CAPACITY_KWH=9.52
+          BATTERY_CAPACITY_KWH="9.52"
           EXPECTED_CONSUMPTION_KWH=12
-          KWH_PREDICTION=${{ steps.get-sunshine-prediction.KWH_PREDICTION }}"
+          KWH_PREDICTION="${{ steps.get-sunshine-prediction.KWH_PREDICTION }}"
           
           let "SHORT_FALL_KWH=$EXPECTED_CONSUMPTION_KWH-$KWH_PREDICTION"
           echo "Expecting to need ${SHORT_FALL_KWH}kWh from the grid tomorrow"
