@@ -23,7 +23,7 @@ jobs:
           cat $PREDICTIONS_FILE
           
           KWH_PREDICTION=$(
-              jq ".forecasts[]  | select(.period_end | contains(\"$TOMORROW\")) | .pv_estimate10" $PREDICTIONS_FILE | \
+              jq ".forecasts[]  | select(.period_end | contains(\"$TOMORROW\")) | .pv_estimate" $PREDICTIONS_FILE | \
               awk '{ sum += $1 } END { print sum / 2.0 }'
           )
 
@@ -34,7 +34,7 @@ jobs:
         name: 'Set Battery Charge Percentage'
         run: |
           BATTERY_CAPACITY_KWH="9.52"
-          EXPECTED_CONSUMPTION_KWH=12
+          EXPECTED_CONSUMPTION_KWH=15
           KWH_PREDICTION="${{ steps.get-sunshine-prediction.outputs.KWH_PREDICTION }}"
           
           SHORT_FALL_KWH=$(
@@ -44,7 +44,7 @@ jobs:
           
           CHARGE_PERCENT=$(
             echo "$SHORT_FALL_KWH $BATTERY_CAPACITY_KWH" | \
-              awk '{ charge = $1 / $2 * 100; print (charge < 25 ? 25 : charge > 90 ? 90 : charge ) }'
+              awk '{ charge = $1 / $2 * 100; print (charge < 25 ? 25 : charge > 95 ? 95 : charge ) }'
           )
           echo "Setting battery to charge to ${CHARGE_PERCENT}%"
           
