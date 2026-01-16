@@ -34,7 +34,7 @@ jobs:
         name: 'Set Battery Charge Percentage'
         run: |
           BATTERY_CAPACITY_KWH="9.52"
-          EXPECTED_CONSUMPTION_KWH=15
+          EXPECTED_CONSUMPTION_KWH=20
           KWH_PREDICTION="${{ steps.get-sunshine-prediction.outputs.KWH_PREDICTION }}"
           
           SHORT_FALL_KWH=$(
